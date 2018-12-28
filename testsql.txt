@@ -1,0 +1,69 @@
+select
+id,
+name,
+artist,
+substr(rel_date,0,5),
+case when (substr(rel_date,0,5) < '1910') then '1900s'
+	when (substr(rel_date,0,5) >= '1910' and substr(rel_date,0,5) < '1920') then '1910s'
+	when (substr(rel_date,0,5) >= '1920' and substr(rel_date,0,5) < '1930') then '1920s'
+	when (substr(rel_date,0,5) >= '1930' and substr(rel_date,0,5) < '1940') then '1930s'
+	when (substr(rel_date,0,5) >= '1940' and substr(rel_date,0,5) < '1950') then '1940s'
+	when (substr(rel_date,0,5) >= '1950' and substr(rel_date,0,5) < '1960') then '1950s'
+	when (substr(rel_date,0,5) >= '1960' and substr(rel_date,0,5) < '1970') then '1960s'
+	when (substr(rel_date,0,5) >= '1970' and substr(rel_date,0,5) < '1980') then '1970s'
+	when (substr(rel_date,0,5) >= '1980' and substr(rel_date,0,5) < '1990') then '1980s'
+	when (substr(rel_date,0,5) >= '1990' and substr(rel_date,0,5) < '2000') then '1990s'
+	when (substr(rel_date,0,5) >= '2000' and substr(rel_date,0,5) < '2010') then '2000s'
+	when (substr(rel_date,0,5) >= '2010' and substr(rel_date,0,5) < '2020') then '2010s'
+	end dateClass,
+explicit,
+case when (explicit = 0) then 'clean'
+	when (explicit = 1) then 'explicit'
+	end explicitClass,
+time_signature,
+key,
+tempo,
+case when (tempo <= 50) then 'very slow'
+	when (tempo > 50 and tempo <= 100) then 'slow'
+	when (tempo > 100 and tempo <= 150) then 'moderate'
+	when (tempo > 150 and tempo <= 200) then 'fast'
+	when (tempo > 200 and tempo <= 250) then 'very fast'
+	end tempoClass,
+mode,
+case when (mode = 0) then 'minor'
+	when (mode = 1) then 'major'
+	end modeClass,
+duration_ms,
+case when (duration_ms <= 120000) then 'very short'
+	when (duration_ms > 120000 and duration_ms <= 180000) then 'short'
+	when (duration_ms > 180000 and duration_ms <= 240000) then 'medium'
+	when (duration_ms > 240000 and duration_ms <= 300000) then 'long'
+	when (duration_ms > 300000) then 'very long'
+	end durationClass,
+danceability
+--valence,
+--energy,
+--loudness,
+--speechiness,
+--acousticness,
+--instrumentalness,
+--liveness
+from song_analysis
+where
+key is not null
+and tempo is not null
+and mode is not null
+and duration_ms is not null
+and danceability is not null
+and valence is not null
+and energy is not null
+and loudness is not null
+and speechiness is not null
+and instrumentalness is not null
+and substr(rel_date,0,5) >= '1899'
+and tempo != 0.0
+and time_signature != 0
+and liveness is not null
+and duration_ms >= 60000
+order by substr(rel_date,0,5) asc
+limit 10;
