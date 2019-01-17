@@ -1,7 +1,7 @@
 select
---id,
---name,
---artist,
+id,
+name,
+artist,
 cast(substr(rel_date,0,5) as int) as rel_year,
 case when (substr(rel_date,0,5) < '1910') then '1900s'
 	when (substr(rel_date,0,5) >= '1910' and substr(rel_date,0,5) < '1920') then '1910s'
@@ -99,7 +99,8 @@ liveness,
 case when (liveness <= 0.33) then 'studio recording'
 	when (liveness > 0.33 and liveness <= 0.66) then 'moderate liveness'
 	when (liveness > 0.66) then 'live recording'
-	end livenessClass
+	end livenessClass,
+count(*)
 from song_analysis
 where
 key is not null
@@ -116,6 +117,4 @@ and substr(rel_date,0,5) >= '1899'
 and tempo != 0.0
 and time_signature != 0
 and liveness is not null
-and duration_ms >= 60000
-order by id
-limit 5;
+and duration_ms >= 60000;
